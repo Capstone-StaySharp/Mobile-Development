@@ -4,17 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.capstone.data.room.DrowsinessDatabase
 import com.example.capstone.databinding.FragmentHistoryBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HistoryFragment : Fragment() {
 
     private var _binding: FragmentHistoryBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    private lateinit var drowsinessAdapter: DrowsinessAdapter
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,17 +24,21 @@ class HistoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val historyViewModel =
-            ViewModelProvider(this).get(HistoryViewModel::class.java)
-
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        historyViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        binding.rvHistory.layoutManager = LinearLayoutManager(requireContext())
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val records = DrowsinessDatabase
+                .getDatabase(requireContext()).drowsinessDao().getAllRecords()
+
+            withContext(Dispatchers.Main) {
+                drowsinessAdapter = DrowsinessAdapter(records)
+                binding.rvHistory.adapter = drowsinessAdapter
+            }
         }
-        return root
+
+        return binding.root
     }
 
     override fun onDestroyView() {

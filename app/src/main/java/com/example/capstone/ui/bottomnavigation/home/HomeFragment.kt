@@ -1,18 +1,15 @@
 package com.example.capstone.ui.bottomnavigation.home
 
 import android.content.Intent
-import android.graphics.Color
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.capstone.R
 import com.example.capstone.databinding.FragmentHomeBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class HomeFragment : Fragment() {
 
@@ -28,20 +25,16 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         binding.fabMain.imageTintList = null
-
         binding.btnDetect.imageTintList = null
+        binding.fabMain.setOnClickListener { showAnnouncementDialog() }
+        binding.btnDetect.setOnClickListener { startCamera() }
 
-        binding.fabMain.setOnClickListener {
-            showAnnouncementDialog()
-        }
-
-        binding.btnDetect.setOnClickListener { startCameraX() }
         return binding.root
-
     }
 
-    private fun startCameraX() {
-
+    private fun startCamera() {
+        val intent = Intent(requireContext(), CameraActivity::class.java)
+        startActivity(intent)
     }
 
     private fun showAnnouncementDialog() {
@@ -54,3 +47,5 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
+
+data class CapturedFace(val bitmap: Bitmap, val timestamp: Long)

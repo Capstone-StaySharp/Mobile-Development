@@ -2,29 +2,22 @@ package com.example.capstone.ui.bottomnavigation.home
 
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.capstone.R
 
 class AnnouncementDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val message = """
-            Pengumuman:
-            1. Poin pertama
-            2. Poin kedua
-            3. Poin ketiga
-            4. Poin keempat
-            5. Poin kelima
-        """.trimIndent()
+        val message = "1. Ensure your internet is active and the connection is stable.\n" +
+                "2. Ensure the screen is in an upright or vertical position.\n" +
+                "3. Position the front camera at eye level.\n" +
+                "4. Ensure there is adequate lighting around the face."
+
 
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Pengumuman")
+        builder.setTitle("Usage Instructions")
             .setMessage(message)
-            .setPositiveButton("Tutup") { dialog, _ ->
+            .setPositiveButton("Close") { dialog, _ ->
                 dialog.dismiss()
             }
 

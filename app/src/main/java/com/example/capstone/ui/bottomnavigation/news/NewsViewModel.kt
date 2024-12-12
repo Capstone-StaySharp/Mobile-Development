@@ -18,29 +18,21 @@ class NewsViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    fun displayEvents(){
+    suspend fun displayEvents() {
         _isLoading.value = true
-        val apiService = ApiConfig.getApiService()
-        apiService.getEvents().enqueue(object : Callback<Response> {
-            override fun onResponse(
-                call: Call<Response>,
-                response: retrofit2.Response<Response>
-            )
-            {
-                if (response.isSuccessful){
-                    _isLoading.value = false
-                    _events.value = response.body()?.articles?: emptyList()
-                    Log.d("API_RESPONSE", response.body()?.articles.toString())
-                }else {
-                    _isLoading.value = false
-                    Log.e("API_ERROR", "Response failed: ${response.code()}")
-                }
-
+        val apiService = ApiConfig.getApiServiceNews()
+        try {
+            val response = apiService.getEvents()
+            _isLoading.value = false
+            if (response.status == "ok") {
+                _events.value = response.articles
+            } else {
+                Log.e("API_ERROR", "Response failed: ${response.status}")
             }
-            override fun onFailure(call: Call<Response>, t: Throwable) {
-                _isLoading.value = false
-                Log.d("API_ERROR", t.message.toString())
-            }
-        })
+        } catch (e: Exception) {
+            _isLoading.value = false
+            Log.e("API_ERROR", "Exception: ${e.message}")
+        }
     }
+
 }

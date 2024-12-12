@@ -73,4 +73,6 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.room.runtime)
     ksp(libs.room.compiler)
+    implementation(libs.play.services.mlkit.face.detection)
+    implementation (libs.androidx.room.ktx)
 }
